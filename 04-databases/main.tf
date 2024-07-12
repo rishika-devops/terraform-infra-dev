@@ -93,6 +93,7 @@ resource "null_resource" "redis" {
   ami = data.aws_ami.centos.id
   vpc_security_group_ids = [data.aws_ssm_parameter.mysql_sg_id.value]
   subnet_id              = local.database_subnet_id
+  iam_instance_profile = "admin-role"
   tags = merge(
     var.common_tags,
     {
@@ -175,3 +176,41 @@ resource "null_resource" "rabbitmq" {
     ]
   }
   }
+  module "records" {
+  source  = "terraform-aws-modules/route53/aws//modules/records"
+  zone_name = var.zone_name
+  records = [
+    {
+      name    = "mongodb-dev"
+      type    = "A"
+      ttl     = 1
+      records = [
+        module.mongodb.private_ip,
+      ]
+    },
+    {
+      name    = "redis-dev"
+      type    = "A"
+      ttl     = 1
+      records = [
+        module.redis.private_ip,
+      ]
+    },
+    {
+      name    = "rabbitmq-dev"
+      type    = "A"
+      ttl     = 1
+      records = [
+        module.rabbitmq.private_ip,
+      ]
+    },
+    {
+      name    = "mysql-dev"
+      type    = "A"
+      ttl     = 1
+      records = [
+        module.mysql.private_ip,
+      ]
+    },
+  ]
+}
