@@ -34,7 +34,7 @@ pipeline {
         stage('vpn') { 
             steps {
                 sh """
-                  cd 03-vpc
+                  cd 03-vpn
                   terraform init -reconfigure
                   terraform destroy -auto-approve
                 """  
@@ -44,7 +44,7 @@ pipeline {
         stage('sg') { 
             steps {
                 sh """
-                  cd 02-vpc
+                  cd 02-sg
                   terraform init -reconfigure
                   terraform destroy -auto-approve
                 """  
