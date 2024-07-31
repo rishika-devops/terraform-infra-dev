@@ -8,33 +8,6 @@ pipeline {
         ansiColor('xterm')
     }
     stages {
-        stage('vpc') { 
-            steps {
-                sh """
-                  cd 01-vpc
-                  terraform init -reconfigure
-                  terraform destroy -auto-approve
-                """  
-            }
-        }
-        stage('sg') { 
-            steps {
-                sh """
-                  cd 02-vpc
-                  terraform init -reconfigure
-                  terraform destroy -auto-approve
-                """  
-            }
-        }
-        stage('vpn') { 
-            steps {
-                sh """
-                  cd 03-vpc
-                  terraform init -reconfigure
-                  terraform destroy -auto-approve
-                """  
-            }
-        }
         stage('db alb') { 
             parallel{
                 stage('db'){
@@ -58,6 +31,36 @@ pipeline {
         
         }
         }
+        stage('vpn') { 
+            steps {
+                sh """
+                  cd 03-vpc
+                  terraform init -reconfigure
+                  terraform destroy -auto-approve
+                """  
+            }
+        }
+        
+        stage('sg') { 
+            steps {
+                sh """
+                  cd 02-vpc
+                  terraform init -reconfigure
+                  terraform destroy -auto-approve
+                """  
+            }
+        }
+        stage('vpc') { 
+            steps {
+                sh """
+                  cd 01-vpc
+                  terraform init -reconfigure
+                  terraform destroy -auto-approve
+                """  
+            }
+        }
+        
+        
     }
     post {
         always {
