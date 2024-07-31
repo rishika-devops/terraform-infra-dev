@@ -20,7 +20,7 @@ pipeline {
         stage('sg') { 
             steps {
                 sh """
-                  cd 02-vpc
+                  cd 02-sg
                   terraform init -reconfigure
                   terraform apply -auto-approve
                 """  
@@ -29,7 +29,7 @@ pipeline {
         stage('vpn') { 
             steps {
                 sh """
-                  cd 03-vpc
+                  cd 03-vpn
                   terraform init -reconfigure
                   terraform apply -auto-approve
                 """  
